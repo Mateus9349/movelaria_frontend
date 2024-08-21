@@ -1,0 +1,59 @@
+.menu {
+    display: flex;
+    width: 152px;
+    height: 612px;
+    padding: 32px 8px 0px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    border-radius: 0px 20px 20px 0px;
+    background: url('../../assets/img/fundo_navbar.svg'), lightgray 50% / cover no-repeat;
+}
+
+.logo {
+    width: 100px;
+    align-self: center;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.links {
+    color: var(--grayscale-000, #FFF);
+    text-decoration: none;
+    font-family: 'Basic Sans';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    box-sizing: border-box;
+}
+
+#cadastros::before {
+    content: url('../../assets/img/icons/cadastro.svg');
+    margin: 30px 5px;
+}
+
+#coletas::before {
+    content: url('../../assets/img/icons/coletas.svg');
+    margin: 30px 5px;
+}
+
+#lotes::before {
+    content: url('../../assets/img/icons/lotes.svg');
+    margin: 30px 5px;
+}
+
+#processos::before {
+    content: url('../../assets/img/icons/processos.svg');
+    margin: 30px 5px;
+}

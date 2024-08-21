@@ -1,0 +1,9 @@
+main{
+    display: flex;
+}
+
+.container-page-coletas{
+    display: flex;
+    flex-direction: column;
+    margin-left: 200px;
+}
