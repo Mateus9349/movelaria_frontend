@@ -4,14 +4,16 @@ import http from '../../http';
 // Definição da interface para os dados do formulário
 interface FormData {
   nome: string;
-  tipo_processo: string;
-  fonte_energia: string;
-  potencia: string;
-  valor: string;
-  data_aquisicao: string;
-  vida_util: string;
-  dias_utilizados: string;
-  horas_trabalhadas: string;
+  tipoProcesso: string;
+  fonteEnergia: string;
+  potencia: number;
+  valor: number;
+  dataAquisicao: string;
+  vidaUtil: number;
+  depreciacaoAnual: number,
+  depreciacaoDia: number,
+  diasUtilizados: number;
+  horasTrabalhadas: number;
 }
 
 const FormMaquina: React.FC = () => {
@@ -27,22 +29,26 @@ const FormMaquina: React.FC = () => {
   const [horasTrabalhadas, setHorasTrabalhadas] = useState<string>('');
 
   // Tipagem do parâmetro do evento
-  const cadastrar = (e: React.FormEvent<HTMLFormElement>) => {
+  const cadastrar = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData: FormData = {
-      nome,
-      tipo_processo: tipoMaquina,
-      fonte_energia: energia,
-      potencia,
-      valor,
-      data_aquisicao: dataAquisicao,
-      vida_util: vidaUtil,
-      dias_utilizados: diasTrabalhados,
-      horas_trabalhadas: horasTrabalhadas
+      nome: nome,
+      tipoProcesso: tipoMaquina,
+      fonteEnergia: energia,
+      potencia: Number(potencia),
+      valor: Number(valor),
+      dataAquisicao: dataAquisicao,
+      vidaUtil: Number(vidaUtil),
+      depreciacaoAnual: 0,
+      depreciacaoDia: 0,
+      diasUtilizados: Number(diasTrabalhados),
+      horasTrabalhadas: Number(horasTrabalhadas)
     };
 
-    http.post('/maquinas', formData)
+    console.log(formData)
+
+    await http.post('/maquinas', formData)
       .then(res => {
         alert('Formulário de Máquina enviado com sucesso!');
         setNome('');

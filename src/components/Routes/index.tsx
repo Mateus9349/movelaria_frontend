@@ -4,6 +4,7 @@ import Home from "../../pages/Home";
 import Processos from "../../pages/Processos";
 import Cadastro from "../../pages/Cadastro";
 import Madeiras from "../../pages/Madeiras";
+import NovoProcesso from "../../pages/NovoProcesso";
 
 const Rotas = () => (
     <BrowserRouter>
@@ -12,6 +13,7 @@ const Rotas = () => (
             <Route path="/processos" element={<Processos/>} />
             <Route path="/cadastros" element={<Cadastro/>} />
             <Route path="/madeiras" element={<Madeiras/>} />
+            <Route path="/novoProcesso" element={<NovoProcesso/>} />
         </Routes>
     </BrowserRouter>
 );

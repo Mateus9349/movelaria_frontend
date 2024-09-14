@@ -2,8 +2,8 @@ import { useState } from 'react';
 import './style.css'
 import NavBar from '../../components/NavBar';
 import CabecalhoMadeiras from '../../components/CabecalhoMadeiras';
-import FormMadeira from '../../components/Forms/FormMadeira';
 import SectionMadeiras from '../../components/SectionMadeiras';
+import ReceberMadeira from '../../components/ReceberMadeira';
 
 const Madeiras = () => {
     const [click, setClick] = useState<boolean>(false);
@@ -22,13 +22,13 @@ const Madeiras = () => {
     return (
         <main>
             <NavBar />
-            
+
             <div>
                 <CabecalhoMadeiras mostrarform={mostrarform} mostraMadeiras={mostraMadeiras} />
                 {clickEstoque && <SectionMadeiras />}
             </div>
 
-            {click && <FormMadeira />}
+            {click && <ReceberMadeira />}
         </main>
     )
 }

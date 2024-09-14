@@ -1,138 +1,227 @@
-import React, { useState, FormEvent } from 'react';
-import http from '../../http';
+import React, { useState, useEffect } from 'react';
 import Botao from '../../Botao';
 import './style.css';
 import { Madeira } from '../../../interfaces/madeira.interface';
 
+interface Props {
+  onSubmit: (data: Madeira) => void;
+  initialData?: Madeira;
+}
 
-const FormMadeira: React.FC = () => {
-  const [data, setData] = useState<string>('');
-  const [tipo, setTipo] = useState<string>('Prancha');
-  const [dofe, setDofe] = useState<string>('');
-  const [cod, setCOD] = useState<string>('');
-  const [altura, setAltura] = useState<number | ''>('');
-  const [comprimento, setComprimento] = useState<number | ''>('');
-  const [largura, setLargura] = useState<number | ''>('');
-  const [valorPago, setValorPago] = useState<number | ''>('');
+const FormMadeira: React.FC<Props> = ({ onSubmit, initialData = {} }) => {
+  const [dados, setDados] = useState<Madeira>({
+    ...initialData,
+    metroCubico: initialData.metroCubico || 0, // Inicializa com 0 se não tiver valor
+  });
 
-  const calcularMetroCubico = () => {
-    const alturaNum = typeof altura === 'number' ? altura : parseFloat(String(altura)) || 0;
-    const comprimentoNum = typeof comprimento === 'number' ? comprimento : parseFloat(String(comprimento)) || 0;
-    const larguraNum = typeof largura === 'number' ? largura : parseFloat(String(largura)) || 0;
-    return alturaNum * comprimentoNum * larguraNum;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setDados(prevState => ({
+      ...prevState,
+      [name]: value === '' ? '' : name === 'expessura' || name === 'comprimento' || name === 'largura' || name === 'valorPago'
+        ? parseFloat(value)
+        : value
+    }));
   };
 
-  const receberMadeira = async (e: FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const dados: Madeira = {
-      id: undefined,
-      dataEntrada: data,
-      tipo: tipo,
-      DOFE: dofe,
-      COD: cod,
-      altura: typeof altura === 'number' ? altura : parseFloat(String(altura)) || 0,
-      comprimento: typeof comprimento === 'number' ? comprimento : parseFloat(String(comprimento)) || 0,
-      largura: typeof largura === 'number' ? largura : parseFloat(String(largura)) || 0,
-      metroCubico: calcularMetroCubico(),
-      valorPago: typeof valorPago === 'number' ? valorPago : parseFloat(String(valorPago)) || 0,
-      ativo: true,
-    };
-
-    try {
-      await http.post('madeiras', dados);
-      alert('Madeira cadastrada com sucesso!');
-      window.location.reload();
-    } catch (error) {
-      alert('Erro ao cadastrar madeira: ' + error);
-    }
+    onSubmit(dados);
   };
 
   return (
-    <form className="formMadeira" onSubmit={receberMadeira}>
+    <form className="formMadeira" onSubmit={handleSubmit}>
       <fieldset className="extra">
-        <div className='alinhar-horizontal'>
+        <div className="alinhar-horizontal">
           <div>
             <label>Data de Entrada</label>
             <input
               type="date"
-              value={data}
-              onChange={(e) => setData(e.target.value)}
+              name="data"
+              value={dados.data || ''}
+              onChange={handleChange}
             />
           </div>
+
           <div>
-            <label>Tipo de peça</label>
-            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
-              <option value="Prancha">Prancha</option>
-              <option value="Borda-a-Borda">Borda-a-Borda</option>
-            </select>
+            <label>Placa</label>
+            <input
+              type="text"
+              name="placa"
+              value={dados.placa || ''}
+              onChange={handleChange}
+            />
           </div>
         </div>
+
         <div className="alinhar-horizontal">
           <div>
-            <label>DOFE</label>
+            <label>Processada</label>
             <input
               type="text"
-              value={dofe}
-              onChange={(e) => setDofe(e.target.value)}
+              name="processada"
+              value={dados.processada || ''}
+              onChange={handleChange}
             />
           </div>
+
           <div>
-            <label>COD</label>
+            <label>Nome Popular</label>
             <input
               type="text"
-              value={cod}
-              onChange={(e) => setCOD(e.target.value)}
+              name="nomePopular"
+              value={dados.nomePopular || ''}
+              onChange={handleChange}
             />
           </div>
         </div>
+
+        <div className="alinhar-horizontal">
+          <div>
+            <label>Nome Científico</label>
+            <input
+              type="text"
+              name="nomeCientifico"
+              value={dados.nomeCientifico || ''}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label>Tora</label>
+            <input
+              type="text"
+              name="tora"
+              value={dados.tora || ''}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
         <div>
-          <label>Altura (m)</label>
+          <label>Produto</label>
           <input
-            type="number"
-            step="0.01"
-            value={altura === '' ? '' : altura}
-            onChange={(e) => setAltura(e.target.value === '' ? '' : Number(e.target.value))}
+            type="text"
+            name="produto"
+            value={dados.produto || ''}
+            onChange={handleChange}
           />
         </div>
-        <div>
-          <label>Comprimento (m)</label>
-          <input
-            type="number"
-            step="0.01"
-            value={comprimento === '' ? '' : comprimento}
-            onChange={(e) => setComprimento(e.target.value === '' ? '' : Number(e.target.value))}
-          />
+
+        <div className="alinhar-horizontal">
+          <div>
+            <label>Expessura (m)</label>
+            <input
+              type="number"
+              step="0.01"
+              name="expessura"
+              value={dados.expessura || ''}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label>Comprimento (m)</label>
+            <input
+              type="number"
+              step="0.01"
+              name="comprimento"
+              value={dados.comprimento || ''}
+              onChange={handleChange}
+            />
+          </div>
         </div>
-        <div>
-          <label>Largura (m)</label>
-          <input
-            type="number"
-            step="0.01"
-            value={largura === '' ? '' : largura}
-            onChange={(e) => setLargura(e.target.value === '' ? '' : Number(e.target.value))}
-          />
+
+        <div className="alinhar-horizontal">
+          <div>
+            <label>Largura (m)</label>
+            <input
+              type="number"
+              step="0.01"
+              name="largura"
+              value={dados.largura || ''}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label>Quantidade</label>
+            <input
+              type="number"
+              name="quantidade"
+              value={dados.quantidade || ''}
+              onChange={handleChange}
+            />
+          </div>
         </div>
+
         <div>
           <label>Metros Cúbicos</label>
           <input
             type="number"
             step="0.01"
-            value={calcularMetroCubico()}
+            name="metroCubico"
+            value={dados.metroCubico || ''}
             readOnly
           />
         </div>
+
+        <div className="alinhar-horizontal">
+          <div>
+            <label>COD</label>
+            <input
+              type="number"
+              name="COD"
+              value={dados.COD || ''}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label>NF</label>
+            <input
+              type="text"
+              name="NF"
+              value={dados.NF || ''}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="alinhar-horizontal">
+          <div>
+            <label>DOF</label>
+            <input
+              type="text"
+              name="DOF"
+              value={dados.DOF || ''}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label>Observação</label>
+            <input
+              type="text"
+              name="observacao"
+              value={dados.observacao || ''}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
         <div>
-          <label>Valor pago (R$)</label>
+          <label>Valor Pago (R$)</label>
           <input
             type="number"
             step="0.01"
-            value={valorPago === '' ? '' : valorPago}
-            onChange={(e) => setValorPago(e.target.value === '' ? '' : Number(e.target.value))}
+            name="valor"
+            value={dados.valor || ''}
+            onChange={handleChange}
           />
         </div>
       </fieldset>
-      <Botao text="Receber Madeira" onClick={receberMadeira}/>
+      <Botao text="Receber Madeira" onClick={handleSubmit} />
     </form>
   );
 };
